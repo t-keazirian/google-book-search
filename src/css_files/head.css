@@ -1,0 +1,12 @@
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+  background-color: darkblue;
+  color: white;
+  padding: 20px;
+  margin-top: 0;
+}
+
