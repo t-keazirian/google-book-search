@@ -1,47 +1,68 @@
 import React from 'react';
+import FilterableList from '../Lists/FilterableList';
+import SearchInput from '../Search-Features/Search-Bar-Features/SearchInput';
+import BookType from '../Search-Features/Search-Bar-Features/BookType';
+import PrintType from '../Search-Features/Search-Bar-Features/PrintType';
 
-class SearchForm extends React.Component {
+class SearchForm extends React.Component {  
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      items: [],
+      searchTerm: ''
+    };
+  }
 
-    constructor(props) {
-      super(props);
-      this.state = {
-        searchTerm: ''
-      }
-    }
+  handleSearch = (e) => {
+    this.setState({
+      searchTerm: e.target.value
+    });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state.searchTerm);
+    const url = 'https://www.googleapis.com/books/v1/volumes?q=';
+    const searchTerm = this.state.searchTerm;
+    const apiKey = '&key=AIzaSyA2CB8O6yvW3d__Sy1cWVBzFFMQHXOmi58';
     
-    handleSearch = (e) => {
-      this.setState({
-        searchTerm: e.target.value
-      });
-    }
+    fetch(url + searchTerm + apiKey)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        this.setState({
+          items: data.items,
+          isLoaded: true,
+        });
+        // console.log(this.state.items)
+      })
+      .catch(err => {
+        this.setState({
+          error: err.message
+        })
+      })
+  }
 
-    handleSubmit = (e) => {
-      e.preventDefault();
-    }
-    
     render() {
 
-
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label htmlFor='search_keyword'>
-          Search:
-        </label>
-        <input
-          type='text'
-          id='search_keyword'
-          name='search_keyword'
-          placeholder='Search keyword here'
-          onChange={this.handleSearch}
-          value={this.state.value}
-        >
-        </input>
-        <input
-          type='submit'
-          value='Search'
-        >
-        </input>
-      </form>
+      <div className='form'>
+
+        <SearchInput 
+          handleSearch={this.handleSearch}
+          handleSubmit={this.handleSubmit}
+          searchTerm={this.state.searchTerm}
+        />
+        <BookType />
+        <PrintType />
+
+        <FilterableList 
+          items={this.state.items}
+          isLoaded={this.state.isLoaded}
+        />
+      </div>
     )
   }
 }

@@ -2,48 +2,9 @@ import React from 'react';
 import '../css_files/filterablelist.css';
 
 class FilterableList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-      items: [],
-      // searchTerm: ''
-    };
-  }
-
-  componentDidMount() {
-    const url = 'https://www.googleapis.com/books/v1/volumes?q=';
-    const searchTerm = 'stephen king';
-    const apiKey = '&key=AIzaSyA2CB8O6yvW3d__Sy1cWVBzFFMQHXOmi58';
-    
-    fetch(url + searchTerm + apiKey)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        this.setState({
-          items: data.items,
-          // searchTerm,
-          isLoaded: true,
-        });
-        console.log(this.state.items)
-      })
-      .catch(err => {
-        this.setState({
-          error: err.message
-        })
-      })
-    }
-
-    setSearchTerm(searchTerm) {
-      this.setState({
-        searchTerm
-      })
-    }
-
   render() {
 
-    let { isLoaded, items } = this.state;
+    let { isLoaded, items } = this.props;
 
     if (!isLoaded) {
       return (
